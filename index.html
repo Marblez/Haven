@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+.SearchBar input {
+     width: 500px;
+     text-align:center;
+     margin-right:auto;
+     margin-left:auto;
+
+}
+</style>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>PriceRates - Free price comparison and data visualization</title>
+
+
+    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+
+    <!-- Fonts -->
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="css/animate.css" rel="stylesheet" />
+    <!-- Squad theme CSS -->
+    <link href="css/style.css" rel="stylesheet">
+	<link href="color/default.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top" data-spy="scroll" data-target=".navbar-custom">
+	<!-- Preloader -->
+	<div id="preloader">
+	  <div id="load"></div>
+	</div>
+
+    <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-main-collapse">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <a class="navbar-brand" href="index.html">
+                    <h1>Haven</h1>
+                </a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-right navbar-main-collapse">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#intro">Home</a></li>
+        <li><a href="#about">About</a></li>
+		<li><a href="#service">Service</a></li>
+		<li><a href="#contact">Contact</a></li>
+          </ul>
+        </li>
+      </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+	<!-- Section: intro -->
+    <section id="intro" class="intro">
+	
+		<div class="slogan">
+			<h2>WELCOME TO <span class="text_color">HAVEN</span> </h2>
+			<h4>Connect Patients with Therapists</h4>
+			<div class="SearchBar">
+            <form>
+			<input type="Search" class="form-control" placeholder="Enter Search Term" id="fname" name="fname" width="1000px"> 
+			</form>
+			</div>
+
+
+			<br>
+			<button class="button" id="button" type="submit">Search!</button> 
+		</div>
+		<div class="page-scroll">
+			<a href="#service" class="btn btn-circle">
+				<i class="fa fa-angle-double-down animated"></i>
+			</a>
+		</div>
+    </section>
+
+ <script src = "data.js"></script>
+<p>Enter the user ID of your patient here to view his or her data.</p>
+
+<input type="text" name="User ID" value="">
+<button id="enter" onclick="test()">Enter</button>
+
+<h1 id="data"></h1>
+<table id="journals">
+  <tr><th font-style:bold>Journal Entries:</th></tr>
+</table>
+
+<script src="https://www.gstatic.com/firebasejs/3.2.0/firebase.js"></script>
+<script>
+function test(){
+  /*var firebase = require("firebase/app");
+  var auth = require("firebase/auth");
+  var data = require("firebase/database");
+  var https = require('https');
+  var request = require("request");*/
+  var config = {
+    apiKey: "AIzaSyAp76aPtfX9-EBPGnGCEP89ngewoA98tDY",
+    authDomain: "health-haven.firebaseapp.com",
+    databaseURL: "https://health-haven.firebaseio.com",
+    projectId: "health-haven",
+    storageBucket: "health-haven.appspot.com",
+    messagingSenderId: "92510334527"};
+    firebase.initializeApp(config);
+    var database = firebase.database();
+    var info = "";
+    document.getElementById("data").innerHTML = "Displaying Data for User 1365841946830211";
+    var leadsRef = database.ref("Users/1365841946830211/Journals");
+    console.log("\n");
+    console.log("Displaying Entries:");
+    leadsRef.on('value', function(snapshot) {
+        snapshot.forEach(function(childSnapshot) {
+          var childData = childSnapshot.val();
+          info = info + JSON.stringify(childData) + " ";
+          console.log(childData);
+          //var newdiv = document.createElement("DIV");
+          var table = document.getElementById("journals");
+          var row = table.insertRow();
+          var cell = row.insertCell();
+          var tempstr = JSON.stringify(childData);
+          tempstr = tempstr.substr(1, tempstr.length-2);
+          cell.innerHTML = tempstr;
+          /*newdiv.appendChild(document.createTextNode(tempstr+"\n"));
+          document.body.appendChild(newdiv);*/
+      });
+  });
+  //document.getElementById("data").innerHTML = info;
+  //document.getElementById("list").innerHTML = info;
+}
+</script>
+
+    <!-- Core JavaScript Files -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.easing.min.js"></script>	
+	<script src="js/jquery.scrollTo.js"></script>
+	<script src="js/wow.min.js"></script>
+    <!-- Custom Theme JavaScript -->
+    <script src="js/custom.js"></script>
+
+</body>
+
+</html>
