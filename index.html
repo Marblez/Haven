@@ -63,16 +63,16 @@
 	
 		<div class="slogan">
 			<h2>WELCOME TO <span class="text_color">HAVEN</span> </h2>
-			<h4>Type in UserID</h4>
+			<h4>Type in User ID of Patient</h4>
 			<div class="SearchBar">
             <form>
-			<input type="Search" class="form-control" placeholder="Enter Search Term" id="fname" name="fname" width="1000px"> 
+			<input type="Search" class="form-control" placeholder="Enter Search Term" id="enter" name="fname" width="1000px"> 
 			</form>
 			</div>
 
 
 			<br>
-			<button class="button" id="button" type="submit">Search!</button> 
+			<button id="enter" onclick="test()">Enter</button>
 		</div>
 		<div class="page-scroll">
 			<a href="#service" class="btn btn-circle">
@@ -81,25 +81,24 @@
 		</div>
     </section>
 
- <script src = "data.js"></script>
-<p>Enter the user ID of your patient here to view his or her data.</p>
-
-<input type="text" name="User ID" value="">
-<button id="enter" onclick="test()">Enter</button>
-
-<h1 id="data"></h1>
-<table id="journals">
-  <tr><th font-style:bold>Journal Entries:</th></tr>
+ <script src = "data.js"></script>	
+ <br>
+ <br>
+ <br>
+<font color="black">
+<h1 id="data" align="center"></h1></font>
+<font color = "black" size="5" align = "center">
+<table id="journals" align="center" font-size:100dp>
+  <tr><th font-style:bold >Journal Entries:</th></tr>
 </table>
-
+</font>
+<br>
+<br>
+<br>
 <script src="https://www.gstatic.com/firebasejs/3.2.0/firebase.js"></script>
 <script>
 function test(){
-  /*var firebase = require("firebase/app");
-  var auth = require("firebase/auth");
-  var data = require("firebase/database");
-  var https = require('https');
-  var request = require("request");*/
+ 
   var config = {
     apiKey: "AIzaSyAp76aPtfX9-EBPGnGCEP89ngewoA98tDY",
     authDomain: "health-haven.firebaseapp.com",
