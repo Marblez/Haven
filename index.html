@@ -20,7 +20,7 @@
     <meta name="author" content="">
 
     <title>Haven - Connecting Patients with Therapists</title>
-
+<script type="text/javascript" src="graph.js"></script>
 
     <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
 
@@ -76,7 +76,7 @@
 
 
 			<br>
-			<button id="enter" onclick="test()">Enter</button>
+			<button id="enter" onclick="test(); emotions();">Enter</button>
 		</div>
 		<div class="page-scroll">
 			<a href="#service" class="btn btn-circle">
@@ -100,11 +100,19 @@
 </div>
 <br>
 <br>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <br>
+<script>
+
+
+</script>
+
+<div id="chart_div" class = "graph" style="width: 100%; height: 500px;"></div>
+<div id="chart_div2" class = "graph" style="width: 100%; height: 500px;"></div>
 <script src="https://www.gstatic.com/firebasejs/3.2.0/firebase.js"></script>
 <script>
 function test(){
- 
+
   var config = {
     apiKey: "AIzaSyAp76aPtfX9-EBPGnGCEP89ngewoA98tDY",
     authDomain: "health-haven.firebaseapp.com",
@@ -117,8 +125,7 @@ function test(){
     var info = "";
     document.getElementById("data").innerHTML = "Displaying Data for User 1365841946830211";
     var leadsRef = database.ref("Users/1365841946830211/Journals");
-    console.log("\n");
-    console.log("Displaying Entries:");
+   
     leadsRef.on('value', function(snapshot) {
         snapshot.forEach(function(childSnapshot) {
           var childData = childSnapshot.val();
@@ -133,8 +140,120 @@ function test(){
           cell.innerHTML = tempstr;
           /*newdiv.appendChild(document.createTextNode(tempstr+"\n"));
           document.body.appendChild(newdiv);*/
+          google.charts.load('current', {packages: ['corechart', 'line']});
+          google.charts.setOnLoadCallback(drawLineColors);
+          google.charts.setOnLoadCallback(drawLineColors2);
+
+
       });
   });
+  
+     var leadsRef = database.ref("Users/1365841946830211/Emotion");
+    
+      leadsRef.on('value', function(snapshot) {
+       
+      
+          var childData = snapshot.val();
+          var str = JSON.stringify(childData);
+
+
+          var temp_arr = [];
+          count = 0;
+          for (i = 0; i < str.length; i++) {
+          if (str[i] == "t"){
+
+            temp_arr.push([count, parseInt(str.slice(i + 6, i + 8)), parseInt(str.slice(i + 17, i + 19)), parseInt(str.slice(i + 32, i + 34))]);
+            count = count + 1;
+          }
+          }
+  
+
+          google.charts.load('current', {packages: ['corechart', 'line']});
+          google.charts.setOnLoadCallback(drawLineColors);
+          function drawLineColors() {
+      
+      var arr = temp_arr;
+      var data = new google.visualization.DataTable();
+      data.addColumn('number', 'X');
+      data.addColumn('number', 'Love');
+      data.addColumn('number', 'Happy');
+      data.addColumn('number','Connection');
+      data.addRows(arr);
+      
+
+      var options = {
+        hAxis: {
+          title: 'Emotion Over Time'
+        },
+        vAxis: {
+          title: 'Emotion Value'
+        },
+        colors: ['#a52714', '#097132','#0029c2']
+      };
+
+      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+      chart.draw(data, options);
+    }
+
+
+      });
+
+var leadsRef = database.ref("Users/1365841946830211/Sentiment");
+    
+      leadsRef.on('value', function(snapshot) {
+       
+      
+          var childData = snapshot.val();
+          var str = JSON.stringify(childData);
+          console.log(str);
+          /*
+          {"1127958":{"-L6AwBoQjWSBUtUzEois":{"sent_mag":0,"sent_score":0}},"1208308":{"-L6AwBh9ZXSVlFjmb9-7":{"sent_mag":0.30000001192092896,"sent_score":-0.30000001192092896}},"1676570":{"-L6AwBZjIgF02STgudCN":{"sent_mag":0.5,"sent_score":-0.5}},"3466387":{"-L6AwKqHvNdjn2XRw85K":{"sent_mag":0.8999999761581421,"sent_score":-0.4000000059604645}},"3570598":{"-L6AwjNcWmomST1cERw7":{"sent_mag":0.10000000149011612,"sent_score":0}},"3602896":{"-L6Awr9IQFMrBIrjNG6z":{"sent_mag":0.4000000059604645,"sent_score":0}}}
+          */
+          
+
+
+
+
+
+
+
+
+
+
+
+          // REVERSE STRING: s.split("").reverse().join("");
+          google.charts.load('current', {packages: ['corechart', 'line']});
+          google.charts.setOnLoadCallback(drawLineColors2);
+
+          function drawLineColors2() {
+          var arr = [[0, 0,-14],    [1, 10,1],   [2, 23,-6],  [3, 17,5],   [4, 18,1],  [5, 9,2],
+            [6, -11,23]]
+      
+            var data = new google.visualization.DataTable();
+            data.addColumn('number', 'X');
+            data.addColumn('number', 'Emotional Magnitude');
+            data.addColumn('number', 'Sentiment');
+
+            data.addRows(arr);
+            
+
+            var options = {
+              hAxis: {
+                title: 'Sentimental Analysis'
+              },
+              vAxis: {
+                title: 'Sentimental Value'
+              },
+              colors: ['#a52714', '#097132']
+            };
+
+            var chart = new google.visualization.LineChart(document.getElementById('chart_div2'));
+            chart.draw(data, options);
+          }
+
+      });
+
+    
   //document.getElementById("data").innerHTML = info;
   //document.getElementById("list").innerHTML = info;
 }
