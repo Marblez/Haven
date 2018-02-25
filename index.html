@@ -9,8 +9,7 @@
 
 }
 .datatable{
-  margin-right:100px;
-  margin-left:100px;
+  text-align: center;
 }
 </style>
 <head>
@@ -94,12 +93,12 @@
 <h1 id="data" align="center"></h1></font>
 <font color = "black" size="5" align = "center">
 <table id="journals" align="center" font-size:100dp margin-left:100px class = "datatable">
-  <tr><th font-style:bold>Journal Entries:</th></tr>
+  <tr><th font-style:bold></th></tr>
+  <p style="text-align:center" id = "Journ"><font size="10dp"></font></a>
 </table>
 </font>
 </div>
-<br>
-<br>
+
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <br>
 <script>
@@ -126,27 +125,7 @@ function test(){
     document.getElementById("data").innerHTML = "Displaying Data for User 1365841946830211";
     var leadsRef = database.ref("Users/1365841946830211/Journals");
    
-    leadsRef.on('value', function(snapshot) {
-        snapshot.forEach(function(childSnapshot) {
-          var childData = childSnapshot.val();
-          info = info + JSON.stringify(childData) + " ";
-          console.log(childData);
-          //var newdiv = document.createElement("DIV");
-          var table = document.getElementById("journals");
-          var row = table.insertRow();
-          var cell = row.insertCell();
-          var tempstr = JSON.stringify(childData);
-          tempstr = tempstr.substr(1, tempstr.length-2);
-          cell.innerHTML = tempstr;
-          /*newdiv.appendChild(document.createTextNode(tempstr+"\n"));
-          document.body.appendChild(newdiv);*/
-          google.charts.load('current', {packages: ['corechart', 'line']});
-          google.charts.setOnLoadCallback(drawLineColors);
-          google.charts.setOnLoadCallback(drawLineColors2);
-
-
-      });
-  });
+   
   
      var leadsRef = database.ref("Users/1365841946830211/Emotion");
     
@@ -175,9 +154,9 @@ function test(){
       var arr = temp_arr;
       var data = new google.visualization.DataTable();
       data.addColumn('number', 'X');
-      data.addColumn('number', 'Love');
+      data.addColumn('number', 'Connection');
       data.addColumn('number', 'Happy');
-      data.addColumn('number','Connection');
+      data.addColumn('number','Love');
       data.addRows(arr);
       
 
@@ -209,7 +188,61 @@ var leadsRef = database.ref("Users/1365841946830211/Sentiment");
           /*
           {"1127958":{"-L6AwBoQjWSBUtUzEois":{"sent_mag":0,"sent_score":0}},"1208308":{"-L6AwBh9ZXSVlFjmb9-7":{"sent_mag":0.30000001192092896,"sent_score":-0.30000001192092896}},"1676570":{"-L6AwBZjIgF02STgudCN":{"sent_mag":0.5,"sent_score":-0.5}},"3466387":{"-L6AwKqHvNdjn2XRw85K":{"sent_mag":0.8999999761581421,"sent_score":-0.4000000059604645}},"3570598":{"-L6AwjNcWmomST1cERw7":{"sent_mag":0.10000000149011612,"sent_score":0}},"3602896":{"-L6Awr9IQFMrBIrjNG6z":{"sent_mag":0.4000000059604645,"sent_score":0}}}
           */
-          
+          var childData = snapshot.val();
+          var str = JSON.stringify(childData);
+          console.log(str);
+          /*
+          {"1127958":{"-L6AwBoQjWSBUtUzEois":{"sent_mag":0,"sent_score":0}},"1208308":{"-L6AwBh9ZXSVlFjmb9-7":{"sent_mag":0.30000001192092896,"sent_score":-0.30000001192092896}},"1676570":{"-L6AwBZjIgF02STgudCN":{"sent_mag":0.5,"sent_score":-0.5}},"3466387":{"-L6AwKqHvNdjn2XRw85K":{"sent_mag":0.8999999761581421,"sent_score":-0.4000000059604645}},"3570598":{"-L6AwjNcWmomST1cERw7":{"sent_mag":0.10000000149011612,"sent_score":0}},"3602896":{"-L6Awr9IQFMrBIrjNG6z":{"sent_mag":0.4000000059604645,"sent_score":0}}}
+          */
+                    
+                              //var str = "{\"1127958\":{\"-L6AwBoQjWSBUtUzEois\":{\"sent_mag\":0,\"sent_score\":0}},\"1208308\":{\"-L6AwBh9ZXSVlFjmb9-7\":{\"sent_mag\":0.30000001192092896,\"sent_score\":-0.30000001192092896}}"
+          var string_arr = str.split(",");
+          var chr = ""
+          var result = [];
+          for (var i = 0; i < string_arr.length; i++) {
+            var temp = "";
+            var count = 0;
+            var el = string_arr[i];
+            var count2 = -1;
+            while(true){
+              console.log(temp)
+              if (count2 == -1){
+                chr = el.slice(-1)
+              }
+              else{
+                chr = el.slice(count2,count2+1) 
+              }
+              if (chr == "}"){
+                count2 = count2 - 1;
+                continue;
+              }
+              else if(chr == ":"){
+                count2 = count2 - 1;
+                console.log(temp)
+                result.push(temp);
+                  break;
+              }
+              else{
+                temp = chr + temp;
+                count2 = count2 - 1;
+              }
+            }
+            count = count + 1;
+          }
+
+          var int_arr = [];
+          for (var k = 0; k < result.length; k++){
+            int_arr.push(parseInt(result[k]));
+          }
+          console.log(int_arr);
+
+          var ans = [];
+          var index = 0;
+          for (var j = 0; j < int_arr.length/2; j++){
+            ans.push(j, int_arr[index], int_arr[index+1]);
+            index = index + 2;
+          }
+
 
 
 
@@ -249,10 +282,37 @@ var leadsRef = database.ref("Users/1365841946830211/Sentiment");
 
             var chart = new google.visualization.LineChart(document.getElementById('chart_div2'));
             chart.draw(data, options);
+            displayJournals();
           }
 
       });
 
+function displayJournals(){
+  
+    var leadsRef = database.ref("Users/1365841946830211/Journals");
+   
+    leadsRef.on('value', function(snapshot) {
+        snapshot.forEach(function(childSnapshot) {
+          var childData = childSnapshot.val();
+          console.log("TESTINGGG");
+          info = info + JSON.stringify(childData) + " ";
+          console.log(childData);
+          //var newdiv = document.createElement("DIV");
+          var table = document.getElementById("journals");
+          var row = table.insertRow();
+          var cell = row.insertCell();
+          var tempstr = JSON.stringify(childData);
+          tempstr = tempstr.substr(1, tempstr.length-2);
+          cell.innerHTML = tempstr;
+          /*newdiv.appendChild(document.createTextNode(tempstr+"\n"));
+          document.body.appendChild(newdiv);*/
+          google.charts.load('current', {packages: ['corechart', 'line']});
+         
+
+
+      });
+  });
+}
     
   //document.getElementById("data").innerHTML = info;
   //document.getElementById("list").innerHTML = info;
